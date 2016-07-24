@@ -1,0 +1,19 @@
+{
+  "name": "foca-deudas",
+  "version": "1.0.0",
+  "description": "A lightweight debts manager for MotherFocas",
+  "main": "index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "MotherFoca",
+    "Deudas"
+  ],
+  "author": "MotherFocas",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.4"
+  }
+}
