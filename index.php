@@ -1,5 +1,4 @@
 <?php 
-
     include 'vendor/autoload.php';
     
     $router = new AltoRouter();
@@ -20,7 +19,6 @@
     $match = $router->match();
 
     $view = 'views/'.($match ? $match['target'] : '404').'.php';
-
 ?>
 
 <!DOCTYPE html>

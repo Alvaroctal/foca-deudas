@@ -4,7 +4,7 @@
   "description": "A lightweight debts manager for MotherFocas",
   "main": "index.php",
   "scripts": {
-    "postinstall" : "curl -s https://getcomposer.org/installer | php; php composer.phar install",
+    "postinstall" : "curl -s https://getcomposer.org/installer | php; php composer.phar install"
   },
   "keywords": [
     "MotherFoca",
