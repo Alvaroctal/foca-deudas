@@ -4,8 +4,6 @@ require_once __DIR__ . '/../config/db.php';
 
 class User {
 
-    private $db;
-
     private $id;
     private $username;
     private $name;
@@ -35,7 +33,7 @@ class User {
     private function get($id) {
         $db = DB::getConnection();
 
-        if (!($stmt = $db->prepare("SELECT username, name, surname, paypal, place, email FROM users WHERE id = ?"))) {
+        if (!($stmt = $db->prepare("SELECT id, username, name, surname, paypal, place, email FROM users WHERE id = ?"))) {
             echo "Prepare failed: (" . $db->errno . ") " . $db->error;
         }
 
@@ -49,8 +47,16 @@ class User {
     }
 
     public static function getAll() {
-        $result = DB::getConnection()->query('SELECT username, name, surname, paypal, place, email FROM users;');
-        var_dump($result->fetch_all(MYSQLI_ASSOC));
+        $result = DB::getConnection()->query('SELECT id, username, name, surname, paypal, place, email FROM users;');
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function export() {
+        $data = get_object_vars($this);
+        unset($data['password']);
+        unset($data['salt']);
+
+        return $data;
     }
 
     public function save() {
