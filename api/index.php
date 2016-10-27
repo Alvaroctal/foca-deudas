@@ -1,4 +1,7 @@
 <?php
+
+    session_start();
+
     require __DIR__ . '/../config/db.php';
     require __DIR__ . '/../vendor/autoload.php';
 
@@ -13,6 +16,10 @@
         
         array( 'GET', $baseURL.'/users', 'users/list'),
         array( 'GET', $baseURL.'/users/[i:id]', 'users/get'),
+        array( 'POST', $baseURL.'/users/register', 'users/register'),
+        array( 'POST', $baseURL.'/users/update', 'users/update'),
+        array( 'POST', $baseURL.'/users/login', 'users/login'),
+        array( 'GET', $baseURL.'/users/logout', 'users/logout'),
     ));
 
     $output = array('status' => 0);
