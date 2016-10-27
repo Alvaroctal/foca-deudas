@@ -1,8 +1,8 @@
 {
   "name": "foca-deudas",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A lightweight debts manager for MotherFocas",
+  "main": "index.php",
   "dependencies": {
     "angular": "^1.5.8",
     "angular-route": "^1.5.8",
@@ -18,10 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/Alvaroctal/foca-deudas.git"
   },
-  "author": "",
+  "author": "MotherFocas",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Alvaroctal/foca-deudas/issues"
   },
-  "homepage": "https://github.com/Alvaroctal/foca-deudas#readme"
+  "homepage": "https://github.com/Alvaroctal/foca-deudas"
 }
