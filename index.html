@@ -67,6 +67,8 @@
         <script src="/deudas/assets/js/app.js"></script>
 
         <script type="text/javascript">
+            var apiBaseURL = './api';
+
             var focaDeudas = angular.module('foca-deudas', ['ngRoute','ui.bootstrap']);
 
             focaDeudas.config(['$routeProvider', function($routeProvider) {
@@ -85,7 +87,6 @@
             }]);
 
             focaDeudas.controller('mainCtrl', ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal){
-                $scope.apiBaseURL = './api';
 
                 $ctrl = this;
 
@@ -101,7 +102,7 @@
                         size: size,
                         resolve: { 
                             response: function () {
-                                return source ? (typeof source == 'string' ? $http.get($scope.apiBaseURL + '/' + source) : { data: { status: 1, result: source }}) : false;
+                                return source ? (typeof source == 'string' ? $http.get(apiBaseURL + '/' + source) : { data: { status: 1, result: source }}) : false;
                             } 
                         }
                     }).result.then(function (data) {
@@ -114,18 +115,12 @@
             }]);
 
             focaDeudas.controller('usersCtrl', ['$scope', '$http', function($scope, $http) {
-                $http.get($scope.apiBaseURL + '/users').then(function success(response) {
+                $http.get(apiBaseURL + '/users').then(function success(response) {
                     if (response.data.status) $scope.users = response.data.result;
                 }, function error(response) {
                     console.log('error');
                     console.log(response);
                 });
-
-                $scope.showEditUser = function(id) {
-                    $http.get($scope.apiBaseURL + '/users/' + id).then(function success(response) {
-                        if (response.data.status) $scope.user = response.data.result;
-                    });
-                }
             }]);
 
             focaDeudas.controller('ModalInstanceCtrl', ['$uibModalInstance', '$http', '$scope', 'response', function ($uibModalInstance, $http, $scope, response) {
@@ -140,7 +135,7 @@
 
                 $ctrl.submit = function (url) {
                     console.log($scope);
-                    $http.post($scope.apiBaseURL + url, $scope.data).then(function(response) {
+                    $http.post(apiBaseURL + '/' + url, $scope.data).then(function(response) {
                         if (response.data.status) $uibModalInstance.close('close');
                         else console.log(response);
                     });

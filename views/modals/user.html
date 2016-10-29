@@ -37,11 +37,21 @@
                 <button class="btn btn-{{data.telegram ? 'success' : 'default'}}">{{data.telegram ? 'Linked' : 'Unlinked'}}</button>
             </div>
         </div>
+        <div class="row" ng-hide="data.id">
+            <div class="col-sm-6">
+                <label><b>Password</b></label><br>
+                <input type="text" class="form-control" ng-model="data.passwd"/>
+            </div>
+            <div class="col-sm-6">
+                <label><b>Password Repeat</b></label><br>
+                <input type="text" class="form-control" ng-model="data.passwd2"/>
+            </div>
+        </div>
     </form>
 </div>  
     
 <div class="modal-footer">
     <button class="btn btn-default pull-left" ng-click="$ctrl.cancel()">Close</button>
-    <button class="btn btn-primary" ng-click="$ctrl.submit('create/')" ng-show="!data.id">Create</button>
-    <button class="btn btn-warning" ng-click="$ctrl.submit('update/')" ng-show="data.id">Update</button>
+    <button class="btn btn-primary" ng-click="$ctrl.submit('users/create')" ng-show="!data.id">Create</button>
+    <button class="btn btn-warning" ng-click="$ctrl.submit('users/update')" ng-show="data.id">Update</button>
 </div>

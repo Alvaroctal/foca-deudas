@@ -3,29 +3,22 @@
     $_POST = json_decode(file_get_contents('php://input'), true);
 
     if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        if (strlen($_POST['passwd']) => 8) {
+        if (strlen($_POST['passwd']) >= 8) {
     
             $salt = md5(uniqid(rand(), true));
             $passwd = hash("sha256", $_POST['passwd'] . $salt);
 
-            $stmt = $db->prepare('INSERT INTO users (username, name, surname, paypal, place, passwd, salt) VALUES (:username, :name, :surname, :paypal, :place, :passwd, :salt');
+            $stmt = $database->prepare('INSERT INTO users (username, name, surname, paypal, place, email, passwd, salt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
 
-            $stmt->bindParam(':username', $_POST['username']);
-            $stmt->bindParam(':name', $_POST['name']);
-            $stmt->bindParam(':surname', $_POST['surname']);
-            $stmt->bindParam(':paypal', $_POST['paypal']);
-            $stmt->bindParam(':place', $_POST['place']);
-            $stmt->bindParam(':passwd', $_POST['passwd']);
-            $stmt->bindParam(':salt', $_POST['salt']);
+            $stmt->bind_param('ssssssss', $_POST['username'], $_POST['name'], $_POST['surname'], $_POST['paypal'], $_POST['place'], $_POST['email'], $passwd, $salt);
 
-            $stmt->execute();
-
-            if ($stmt->rowCount() == 1) {
+            if ($stmt->execute()) {
                 $output['status'] = 1;
-                $output['result'] = lastInsertId();
+                $output['result'] = $stmt->insert_id;
             } else {
                 $output['code'] = 'no-register';
                 $output['return'] = 'An unexpected error ocurred';
+                print_r($stmt->debugDumpParams());
             }
         } else {
             $output['code'] = 'no-register-passwd';
