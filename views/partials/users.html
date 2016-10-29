@@ -1,0 +1,25 @@
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Manage Users
+            <button class="btn btn-success btn-xs pull-right" ng-click="$ctrl.modal('user')">New user</button>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Place</th>
+                <th class="text-center">Paypal</th>
+                <th class="text-center">Telegram</th>
+                <th class="text-right">Actions</th>
+            </tr>
+            <tr ng-repeat="user in users">
+                <td>{{user.username}}</td>
+                <td>{{user.name}} {{user.surname}}</td>
+                <td>{{user.place}}</td>
+                <td><a href="https://paypal.me/{{user.paypal}}" ng-show="user.paypal != ''"><label class="label label-primary">{{user.paypal}}</label></a></td>
+                <td><label class="label label-success" ng-show="user.telegram">linked</label></td>
+                <td><button class="btn btn-warning btn-xs pull-right" ng-click="$ctrl.modal('user', 'users/' + user.id)">edit</button></td>
+            </tr>
+        </div>
+    </div>
+</div>

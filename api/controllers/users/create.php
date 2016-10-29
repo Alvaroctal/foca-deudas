@@ -8,12 +8,11 @@
             $salt = md5(uniqid(rand(), true));
             $passwd = hash("sha256", $_POST['passwd'] . $salt);
 
-            $stmt = $db->prepare('INSERT INTO users (username, name, surname, rank, paypal, place, passwd, salt) VALUES (:username, :name, :surname, :rank, :paypal, :place, :passwd, :salt');
+            $stmt = $db->prepare('INSERT INTO users (username, name, surname, paypal, place, passwd, salt) VALUES (:username, :name, :surname, :paypal, :place, :passwd, :salt');
 
-            $stmt->bindParam(':usename', $_POST['usename']);
+            $stmt->bindParam(':username', $_POST['username']);
             $stmt->bindParam(':name', $_POST['name']);
             $stmt->bindParam(':surname', $_POST['surname']);
-            $stmt->bindParam(':rank', $_POST['rank']);
             $stmt->bindParam(':paypal', $_POST['paypal']);
             $stmt->bindParam(':place', $_POST['place']);
             $stmt->bindParam(':passwd', $_POST['passwd']);

@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">{{data.id ? 'Edit user' : 'New User'}}</h4>
+</div>
+<div class="modal-body">
+    <form id="form-proyecto">
+        <input type="hidden" name="id" value="{{data.id}}"/>
+        <div class="row">
+            <div class="col-sm-4">
+                <label><b>Username</b></label><br>
+                <input type="text" class="form-control" ng-model="data.username" ng-disabled="data.id"/>
+            </div>
+            <div class="col-sm-4">
+                <label><b>Name</b></label><br>
+                <input type="text" class="form-control" ng-model="data.name"/>
+            </div>
+            <div class="col-sm-4">
+                <label><b>Surname</b></label><br>
+                <input type="text" class="form-control" ng-model="data.surname"/>
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="col-sm-5">
+                <label><b>email</b></label><br>
+                <input type="text" class="form-control" ng-model="data.email" ng-disabled="data.id"/>
+            </div>
+            <div class="col-sm-2">
+                <label><b>Place</b></label><br>
+                <input type="text" class="form-control" ng-model="data.place"/>
+            </div>
+            <div class="col-sm-3">
+                <label><b>Paypal</b></label><br>
+                <input type="text" class="form-control" ng-model="data.paypal"/>
+            </div>
+            <div class="col-sm-2" ng-show="data.id">
+                <label class="text-right"><b>Telegram</b></label><br>
+                <button class="btn btn-{{data.telegram ? 'success' : 'default'}}">{{data.telegram ? 'Linked' : 'Unlinked'}}</button>
+            </div>
+        </div>
+    </form>
+</div>  
+    
+<div class="modal-footer">
+    <button class="btn btn-default pull-left" ng-click="$ctrl.cancel()">Close</button>
+    <button class="btn btn-primary" ng-click="$ctrl.submit('create/')" ng-show="!data.id">Create</button>
+    <button class="btn btn-warning" ng-click="$ctrl.submit('update/')" ng-show="data.id">Update</button>
+</div>

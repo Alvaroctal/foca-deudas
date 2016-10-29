@@ -2,17 +2,13 @@
 
     $_POST = json_decode(file_get_contents('php://input'), true);
 
-    $stmt = $db->prepare('UPDATE users SET name = :name, username = :surname, paypal = :paypal, place = :place WHERE id = :id';
+    $stmt = $database->prepare('UPDATE users SET name = ?, username = ?, paypal = ?, place = ? WHERE id = ?';
 
-    $stmt->bindParam(':id', $_POST['id']);
-    $stmt->bindParam(':name', $_POST['name']);
-    $stmt->bindParam(':surname', $_POST['surname']);
-    $stmt->bindParam(':paypal', $_POST['paypal']);
-    $stmt->bindParam(':place', $_POST['place']);
+    $stmt->bind_param('ssssi', $_POST['name'], $_POST['surname'], $_POST['paypal'], $_POST['place'], $_POST['id']);
 
     $stmt->execute();
 
-    if ($stmt->rowCount() == 1) {
+    if ($stmt->get_result()->num_rows() == 1) {
         $output['status'] = 1;
     } else {
         $output['code'] = 'no-user-update';

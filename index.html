@@ -38,7 +38,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid">
+        <div class="container-fluid" ng-controller="mainCtrl as $ctrl">
             <div class="row">
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
@@ -75,13 +75,80 @@
                     controller: 'AddOrderController'
                 }).when('/users', {
                     templateUrl: 'views/partials/users.html',
-                    controller: 'ShowOrdersController'
+                    controller: 'usersCtrl'
                 }).when('/404', {
                     templateUrl: 'views/partials/404.html',
                     controller: 'ShowOrdersController'
                 }).otherwise({
                     redirectTo: '/404'
                 });
+            }]);
+
+            focaDeudas.controller('mainCtrl', ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal){
+                $scope.apiBaseURL = './api';
+
+                $ctrl = this;
+
+                $ctrl.modal = function (template, source, size) {
+
+                    $uibModal.open({
+                        animation: true,
+                        ariaLabelledBy: 'modal-title',
+                        ariaDescribedBy: 'modal-body',
+                        templateUrl: './views/modals/' + template + '.html',
+                        controller: 'ModalInstanceCtrl',
+                        controllerAs: '$ctrl',
+                        size: size,
+                        resolve: { 
+                            response: function () {
+                                return source ? (typeof source == 'string' ? $http.get($scope.apiBaseURL + '/' + source) : { data: { status: 1, result: source }}) : false;
+                            } 
+                        }
+                    }).result.then(function (data) {
+
+                        // On modal close
+                        
+                        console.log('closed');
+                    });
+                };
+            }]);
+
+            focaDeudas.controller('usersCtrl', ['$scope', '$http', function($scope, $http) {
+                $http.get($scope.apiBaseURL + '/users').then(function success(response) {
+                    if (response.data.status) $scope.users = response.data.result;
+                }, function error(response) {
+                    console.log('error');
+                    console.log(response);
+                });
+
+                $scope.showEditUser = function(id) {
+                    $http.get($scope.apiBaseURL + '/users/' + id).then(function success(response) {
+                        if (response.data.status) $scope.user = response.data.result;
+                    });
+                }
+            }]);
+
+            focaDeudas.controller('ModalInstanceCtrl', ['$uibModalInstance', '$http', '$scope', 'response', function ($uibModalInstance, $http, $scope, response) {
+                var $ctrl = this;
+
+                console.log(response);
+
+                if (response) {
+                    if (response.data.status == 1) $scope.data = response.data.result;
+                    else console.log(response);
+                } else $scope.data = {};
+
+                $ctrl.submit = function (url) {
+                    console.log($scope);
+                    $http.post($scope.apiBaseURL + url, $scope.data).then(function(response) {
+                        if (response.data.status) $uibModalInstance.close('close');
+                        else console.log(response);
+                    });
+                };
+
+                $ctrl.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
             }]);
         </script>
     </body>
