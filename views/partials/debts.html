@@ -1,0 +1,23 @@
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Manage Debts
+            <button class="btn btn-success btn-xs pull-right" ng-click="$ctrl.modal('debt')">New debt</button>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th class="text-right">Actions</th>
+            </tr>
+            <tr ng-repeat="debt in debts">
+                <td>{{debt.title}}</td>
+                <td>{{debt.username}}</td>
+                <td>{{debt.amount}}</td>
+                <td>{{debt.time}}</td>
+                <td><button class="btn btn-warning btn-xs pull-right" ng-click="$ctrl.modal('debt', 'debts/' + debt.id)">edit</button></td>
+            </tr>
+        </div>
+    </div>
+</div>

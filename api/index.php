@@ -2,6 +2,8 @@
 
     session_start();
 
+    $_SESSION['user'] = 1;
+
     require __DIR__ . '/../config/db.php';
     require __DIR__ . '/../vendor/autoload.php';
 
@@ -20,6 +22,13 @@
         array( 'POST', $baseURL.'/users/update', 'users/update'),
         array( 'POST', $baseURL.'/users/login', 'users/login'),
         array( 'GET', $baseURL.'/users/logout', 'users/logout'),
+
+        // Debts
+
+        array( 'GET', $baseURL.'/debts', 'debts/list'),
+        array( 'GET', $baseURL.'/debts/[i:id]', 'debts/get'),
+        array( 'POST', $baseURL.'/debts/create', 'debts/create'),
+        array( 'POST', $baseURL.'/debts/update', 'debts/update'),
     ));
 
     $output = array('status' => 0);

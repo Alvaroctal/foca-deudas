@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$ctrl.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">{{data.id ? 'Edit debt' : 'New debt'}}</h4>
+</div>
+<div class="modal-body">
+    <form id="form-proyecto">
+        <input type="hidden" name="id" value="{{data.id}}"/>
+        <div class="row">
+            <div class="col-sm-12">
+                <label><b>Title</b></label><br>
+                <input type="text" class="form-control" ng-model="data.title" ng-disabled="data.id"/>
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="col-sm-12">
+                <label><b>Description</b></label><br>
+                <textarea class="form-control"ng-model="data.description">{{data.description}}</textarea>
+            </div>
+        </div>
+        <div class="row" ng-hide="data.id">
+            <div class="col-sm-4">
+                <label><b>Amount</b></label><br>
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="data.amount">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-euro"></span></span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>  
+    
+<div class="modal-footer">
+    <button class="btn btn-default pull-left" ng-click="$ctrl.cancel()">Close</button>
+    <button class="btn btn-primary" ng-click="$ctrl.submit('debts/create')" ng-show="!data.id">Create</button>
+    <button class="btn btn-warning" ng-click="$ctrl.submit('debts/update')" ng-show="data.id">Update</button>
+</div>

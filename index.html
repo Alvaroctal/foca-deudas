@@ -78,9 +78,11 @@
                 }).when('/users', {
                     templateUrl: 'views/partials/users.html',
                     controller: 'usersCtrl'
+                }).when('/debts', {
+                    templateUrl: 'views/partials/debts.html',
+                    controller: 'debtsCtrl'
                 }).when('/404', {
-                    templateUrl: 'views/partials/404.html',
-                    controller: 'ShowOrdersController'
+                    templateUrl: 'views/partials/404.html'
                 }).otherwise({
                     redirectTo: '/404'
                 });
@@ -117,6 +119,15 @@
             focaDeudas.controller('usersCtrl', ['$scope', '$http', function($scope, $http) {
                 $http.get(apiBaseURL + '/users').then(function success(response) {
                     if (response.data.status) $scope.users = response.data.result;
+                }, function error(response) {
+                    console.log('error');
+                    console.log(response);
+                });
+            }]);
+
+            focaDeudas.controller('debtsCtrl', ['$scope', '$http', function($scope, $http) {
+                $http.get(apiBaseURL + '/debts').then(function success(response) {
+                    if (response.data.status) $scope.debts = response.data.result;
                 }, function error(response) {
                     console.log('error');
                     console.log(response);

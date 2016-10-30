@@ -18,7 +18,6 @@
             } else {
                 $output['code'] = 'no-register';
                 $output['return'] = 'An unexpected error ocurred';
-                print_r($stmt->debugDumpParams());
             }
         } else {
             $output['code'] = 'no-register-passwd';
