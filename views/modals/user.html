@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-sm-5">
                 <label><b>email</b></label><br>
-                <input type="text" class="form-control" ng-model="data.email" ng-disabled="data.id"/>
+                <input type="email" class="form-control" ng-model="data.email" ng-disabled="data.id"/>
             </div>
             <div class="col-sm-2">
                 <label><b>Place</b></label><br>
@@ -36,15 +36,19 @@
                 <label class="text-right"><b>Telegram</b></label><br>
                 <button class="btn btn-{{data.telegram ? 'success' : 'default'}}">{{data.telegram ? 'Linked' : 'Unlinked'}}</button>
             </div>
-        </div>
+        </div><br />
         <div class="row" ng-hide="data.id">
             <div class="col-sm-6">
-                <label><b>Password</b></label><br>
-                <input type="text" class="form-control" ng-model="data.passwd"/>
+                <div class="form-group" ng-class="{'has-error' : data.passwd.length < 8}">
+                    <label><b>Password</b></label><br>
+                    <input type="password" class="form-control" ng-model="data.passwd" uib-tooltip="Password must be at least 8 chars" tooltip-placement="bottom" tooltip-trigger="'mouseenter'" tooltip-enable="data.passwd.length < 8"/>
+                </div>
             </div>
             <div class="col-sm-6">
-                <label><b>Password Repeat</b></label><br>
-                <input type="text" class="form-control" ng-model="data.passwd2"/>
+                <div class="form-group" ng-class="{'has-error' : data.passwd != data.passwd2}">
+                    <label>Repeat</label>
+                    <input type="password" class="form-control" ng-model="data.passwd2" uib-tooltip="Passwords must be equal" tooltip-placement="bottom" tooltip-trigger="'mouseenter'" tooltip-enable="data.passwd != data.passwd2"/>
+                </div>
             </div>
         </div>
     </form>
@@ -52,6 +56,6 @@
     
 <div class="modal-footer">
     <button class="btn btn-default pull-left" ng-click="$ctrl.cancel()">Close</button>
-    <button class="btn btn-primary" ng-click="$ctrl.submit('users/create')" ng-show="!data.id">Create</button>
+    <button class="btn btn-primary" ng-click="$ctrl.submit('users/create')" ng-show="!data.id" ng-disabled="data.passwd != data.passwd2 || data.passwd.length < 8">Create</button>
     <button class="btn btn-warning" ng-click="$ctrl.submit('users/update')" ng-show="data.id">Update</button>
 </div>

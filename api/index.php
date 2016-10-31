@@ -14,14 +14,18 @@
     $router->addRoutes(array(
         array( 'GET', $baseURL.'/', 'home'),
 
+        // Sessions
+
+        array( 'POST', $baseURL.'/login', 'login'),
+        array( 'GET', $baseURL.'/logout', 'logout'),
+        array( 'GET', $baseURL.'/whoami', 'whoami'),
+
         // Users
         
         array( 'GET', $baseURL.'/users', 'users/list'),
         array( 'GET', $baseURL.'/users/[i:id]', 'users/get'),
         array( 'POST', $baseURL.'/users/create', 'users/create'),
         array( 'POST', $baseURL.'/users/update', 'users/update'),
-        array( 'POST', $baseURL.'/users/login', 'users/login'),
-        array( 'GET', $baseURL.'/users/logout', 'users/logout'),
 
         // Debts
 

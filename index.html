@@ -19,44 +19,13 @@
         <link href="/deudas/assets/css/app.css" rel="stylesheet">
     </head>
     <body ng-app="foca-deudas">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Foca Deudas</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Settings</a></li>
-                        <li><a href="#">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="container-fluid" ng-controller="mainCtrl as $ctrl">
-            <div class="row">
-                <div class="col-sm-3 col-md-2 sidebar">
-                    <ul class="nav nav-sidebar">
-                        <li class="active"><a href="#">Overview</a></li>
-                        <li><a href="#">Users</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                    <div ng-view></div>
-                </div>
-            </div>
-        </div>
+        
+        <div ui-view="page"></div>
 
         <!-- Core JS -->
 
         <script src="/deudas/node_modules/angular/angular.min.js"></script>
-        <script src="/deudas/node_modules/angular-route/angular-route.min.js"></script>
+        <script src="/deudas/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="/deudas/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
         <script src="/deudas/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="/deudas/node_modules/jquery/dist/jquery.min.js"></script>
@@ -69,26 +38,37 @@
         <script type="text/javascript">
             var apiBaseURL = './api';
 
-            var focaDeudas = angular.module('foca-deudas', ['ngRoute','ui.bootstrap']);
+            var focaDeudas = angular.module('foca-deudas', ['ui.router','ui.bootstrap']);
 
-            focaDeudas.config(['$routeProvider', function($routeProvider) {
-                $routeProvider.when('/overview', {
-                    templateUrl: 'views/partials/overview.html',
-                    controller: 'AddOrderController'
-                }).when('/users', {
-                    templateUrl: 'views/partials/users.html',
-                    controller: 'usersCtrl'
-                }).when('/debts', {
-                    templateUrl: 'views/partials/debts.html',
-                    controller: 'debtsCtrl'
-                }).when('/404', {
-                    templateUrl: 'views/partials/404.html'
-                }).otherwise({
-                    redirectTo: '/404'
-                });
-            }]);
+            focaDeudas.config(function($stateProvider, $urlRouterProvider) {
 
-            focaDeudas.controller('mainCtrl', ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal){
+                $stateProvider
+                    .state( 'login', {
+                        url: '/login',
+                        views: { 'page': { templateUrl: './views/pages/login.html', controller: 'loginCtrl' } }
+                    })
+                    .state( 'dashboard', {
+                        url: '/dashboard',
+                        views: { 'page': { templateUrl: './views/pages/dashboard.html', controller: 'mainCtrl as $ctrl' } }
+                    })
+                    .state('dashboard.users', {
+                        url: '/users',
+                        views: { 'partial': { templateUrl: './views/partials/users.html', controller: 'usersCtrl' } }
+                    })
+                    .state('dashboard.debts', {
+                        url: '/debts',
+                        views: { 'partial': { templateUrl: './views/partials/debts.html', controller: 'debtsCtrl' } }
+                    });
+
+                    $urlRouterProvider.otherwise('/dashboard');
+            });
+
+            focaDeudas.controller('mainCtrl', ['$scope', '$http', '$state', '$uibModal', function($scope, $http, $state, $uibModal) {
+
+                $http.get(apiBaseURL + '/whoami').then(function success(response) {
+                    if (response.data.status) $scope.me = response.data.result;
+                    else $state.transitionTo('login');
+                });                
 
                 $ctrl = this;
 
@@ -134,6 +114,16 @@
                 });
             }]);
 
+            focaDeudas.controller('loginCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+
+                $scope.submit = function(url) {
+                    $http.post(apiBaseURL + '/' + url, $scope.data).then(function(response) {
+                        if (response.data.status) $state.transitionTo('dashboard');
+                        else console.log(response);
+                    });
+                }
+            }]);
+
             focaDeudas.controller('ModalInstanceCtrl', ['$uibModalInstance', '$http', '$scope', 'response', function ($uibModalInstance, $http, $scope, response) {
                 var $ctrl = this;
 
@@ -145,10 +135,10 @@
                 } else $scope.data = {};
 
                 $ctrl.submit = function (url) {
-                    console.log($scope);
                     $http.post(apiBaseURL + '/' + url, $scope.data).then(function(response) {
                         if (response.data.status) $uibModalInstance.close('close');
                         else console.log(response);
+                        console.log(response);
                     });
                 };
 
