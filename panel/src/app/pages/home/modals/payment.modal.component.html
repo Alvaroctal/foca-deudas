@@ -36,8 +36,8 @@
             <ng-select [options]="methods" [noFilter]="10" [(ngModel)]="data.user.method" [disabled]="this.user == data.user.id"></ng-select>
           </div>
           <div class="col-md-6" style="margin-top: 20px">
-            <a href="https://paypal.me/{{ data.user.paypal }}/{{ data.user.quantity }}" target="_blank" *ngIf="data.user.paypal && data.method == 'paypal'"><img class="img-fluid" src="https://www.paypalobjects.com/digitalassets/c/website/marketing/na/us/solution-providers/logos2/paypal-here.png" height="30px"></a>
-            <span class="text-danger" *ngIf="!data.user.paypal && data.method == 'paypal'">No ha configurado aún su PayPal</span>
+            <a href="https://paypal.me/{{ data.user.paypal }}/{{ data.user.quantity }}" target="_blank" *ngIf="data.user.paypal && data.user.method == 'paypal'"><img class="img-fluid" src="https://www.paypalobjects.com/digitalassets/c/website/marketing/na/us/solution-providers/logos2/paypal-here.png" height="30px"></a>
+            <span class="text-danger" *ngIf="!data.user.paypal && data.user.method == 'paypal'">No ha configurado aún su PayPal</span>
           </div>
         </div>
       </div>
