@@ -1,0 +1,45 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-users"></i> Usuarios
+          <button class="btn btn-sm btn-success float-right" style="margin-top: 0px;" (click)="modalUser.show()">Nuevo</button>
+          <input type="text" class="float-right" placeholder="buscar..." style="height: 27.5px; margin-right: 8px;" (keyup)="filter($event)">
+        </div>
+        <ngx-datatable class="bootstrap"
+          [rows]="rows"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          [limit]="10">
+          <ngx-datatable-column name="username">
+            <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template><span (click)="sort()">Usuario</span></ng-template>
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>{{ row.username }}</ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="paypal">
+            <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template><span (click)="sort()">Paypal</span></ng-template>
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              <button type="button" class="btn btn-sm btn-outline-success" disabled *ngIf="value != ''">Activo</button>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="telegram">
+            <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template><span (click)="sort()">Telegram</span></ng-template>
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              <button type="button" class="btn btn-sm btn-outline-success" disabled *ngIf="value != ''">Activo</button>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="id">
+            <ng-template let-column="column" ngx-datatable-header-template>Acciones</ng-template>
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <button class="btn btn-sm btn-warning" (click)="modalUser.show(row)">Modificar</button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<modal-user [api]="api" (reload)="reload()"></modal-user>

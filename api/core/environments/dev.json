@@ -1,0 +1,20 @@
+{
+    "jwt": {
+        "key": "",
+        "algorithms": ["HS256"],
+        "version": 1
+    },
+    "database": {
+        "server": "localhost",
+        "user": "root",
+        "password": "",
+        "dbname": "deudas"
+    },
+    "telegram": {
+        "name": "FocaDeudas",
+        "token": "",
+        "webhook": "",
+        "iv": "",
+        "group": ""
+    }
+}

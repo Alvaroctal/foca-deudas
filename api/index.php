@@ -1,69 +1,131 @@
 <?php
+/* =========================================================
+ * Proyecto FocaDeudas
+ * http://motherfocas.eu
+ * =========================================================
+ * All portions are Copyright © 2017 MotherFoca Industries
+ * All Rights Reserved. 
+ * Contributor(s):
+ *  octal@motherfocas.eu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================= */
 
-    session_start();
+date_default_timezone_set('Europe/Madrid');
 
-    $_SESSION['user'] = 1;
+//--------------------------------------------------------------------------
+// Cargar librerias
+//--------------------------------------------------------------------------
 
-    require __DIR__ . '/../config/db.php';
-    require __DIR__ . '/../vendor/autoload.php';
+require 'vendor/autoload.php';
+require 'core/core.php';
 
-    $router = new AltoRouter();
+//--------------------------------------------------------------------------
+// Environment
+//--------------------------------------------------------------------------
 
-    $baseURL = '/deudas/api';
+$environment = $core->getEnvironment();
 
-    $router->addRoutes(array(
-        array( 'GET', $baseURL.'/', 'home'),
+//--------------------------------------------------------------------------
+// JWT session
+//--------------------------------------------------------------------------
 
-        // Sessions
+if (isset($_REQUEST['token'])) {
+    try {
+        if (($session = \Firebase\JWT\JWT::decode($_REQUEST['token'], $environment['jwt']['key'], $environment['jwt']['algorithms'])) && isset($session->version) && $session->version == $environment['jwt']['version']) $core->setSession($session = (array) $session);
+    } catch (Exception $e) { echo json_encode(['status' => 0, 'code' => 'no-session']); die; }
+}
 
-        array( 'POST', $baseURL.'/login', 'login'),
-        array( 'GET', $baseURL.'/logout', 'logout'),
-        array( 'GET', $baseURL.'/whoami', 'whoami'),
+//--------------------------------------------------------------------------
+// Router
+//--------------------------------------------------------------------------
 
-        // Users
-        
-        array( 'GET', $baseURL.'/users', 'users/list'),
-        array( 'GET', $baseURL.'/users/[i:id]', 'users/get'),
-        array( 'POST', $baseURL.'/users/create', 'users/create'),
-        array( 'POST', $baseURL.'/users/update', 'users/update'),
+$relativePath = $core->getRelativePath();
 
-        // Debts
+$router = new AltoRouter();
 
-        array( 'GET', $baseURL.'/debts', 'debts/list'),
-        array( 'GET', $baseURL.'/debts/[i:id]', 'debts/get'),
-        array( 'POST', $baseURL.'/debts/create', 'debts/create'),
-        array( 'POST', $baseURL.'/debts/update', 'debts/update'),
-    ));
+$router->addRoutes(array(
 
-    $output = array('status' => 0);
+    //--------------------------------------------------------------------------
+    // Login
+    //--------------------------------------------------------------------------
+    
+    array('GET', $relativePath.'/whoami', 'ajax:whoami'),
 
-    $match = $router->match();
+    array('POST', $relativePath.'/login', 'ajax:login'),
+    
+    //--------------------------------------------------------------------------
+    // Users
+    //--------------------------------------------------------------------------
 
-    if( $match ) {
-        $controller = './controllers/'.$match['target'].'.php';
-        if (file_exists($controller)) {
+    array('GET', $relativePath.'/users', 'ajax:users/list'),
+    array('GET', $relativePath.'/users/[i:id]', 'ajax:users/get'),
 
-            $database = DB::getConnection();
-            
-            if (!$dataBase->connect_errno) {
-                include $controller;
+    array('POST', $relativePath.'/users/create', 'ajax:users/create'),
+    array('POST', $relativePath.'/users/update', 'ajax:users/update'),
+    array('POST', $relativePath.'/users/delete', 'ajax:users/delete'),
 
-                $output['action'] = str_replace('/', '-', $match['target']);
-            }
-            else {
-                $output['code'] = 'no-db';
-                $output['return'] = 'Internal error, database error';
-            }
-        } 
-        else {
-            $output['code'] = 'no-controller';
-            $output['return'] = 'Internal error, unable to find the controller';
-        }
-    } else {
-        $output['code'] = 'no-found';
-        $output['return'] = 'This option cant be found';
-    }
+    //--------------------------------------------------------------------------
+    // Debts
+    //--------------------------------------------------------------------------
 
-    echo json_encode($output);
+    array('GET', $relativePath.'/debts', 'ajax:debts/list'),
+    array('GET', $relativePath.'/debts/[i:id]', 'ajax:debts/get'),
 
-?>
+    array('POST', $relativePath.'/debts/create', 'ajax:debts/create'),
+    array('POST', $relativePath.'/debts/update', 'ajax:debts/update'),
+    array('POST', $relativePath.'/debts/delete', 'ajax:debts/delete'),
+    array('POST', $relativePath.'/debts/pay', 'ajax:debts/pay'),
+    array('POST', $relativePath.'/debts/resolve', 'ajax:debts/resolve'),
+
+    //--------------------------------------------------------------------------
+    // Telegram
+    //--------------------------------------------------------------------------
+
+    array('GET', $relativePath.'/telegram/'.$environment['telegram']['webhook'].'/webhook', 'telegram:webhook'),
+    array('POST', $relativePath.'/telegram/'.$environment['telegram']['webhook'].'/command', 'telegram:command')
+));
+
+if (! $match = $router->match()) $match = array('target' => 'error:404');
+
+$target = explode(':', $match['target']);
+
+if ($target[0] == 'ajax') {
+
+    $output = array('status' => 0, 'action' => 'no-action');
+
+    //--------------------------------------------------------------------------
+    // Controlador de la API
+    //--------------------------------------------------------------------------
+
+    if (isset($session['id']) || $target[1] == 'login') {
+    
+        if (! include $core->getCorePath().'/controllers/ajax/'.$target[1].'.php') $output['code'] = 'no-permission';
+
+        $output['action'] = $target[1];
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($disableLog)) $core->log('visits', explode('?', $_SERVER['REQUEST_URI'], 2)[0]);
+
+    } else $output['code'] = 'no-login';
+} else if ($target[0] == 'telegram') {
+
+    $output = array('status' => 0, 'action' => $target[1]);
+
+    //--------------------------------------------------------------------------
+    // Controlador del bot de telegram
+    //--------------------------------------------------------------------------
+
+    $telegram = new Longman\TelegramBot\Telegram($environment['telegram']['token'], $environment['telegram']['name']);
+    include $core->getCorePath().'/controllers/telegram/'.$target[1].'.php';
+} else $output = array('status' => 0, 'code' => 'no-controller');
+
+echo json_encode($output); die;

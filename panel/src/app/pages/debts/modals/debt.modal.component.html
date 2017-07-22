@@ -1,0 +1,68 @@
+<div bsModal #modal="bs-modal" [config]="{ignoreBackdropClick: true}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ data.id ? 'Modificar' : 'Nueva'}} deuda</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-9">
+            <label>Nombre</label>
+            <input type="text" class="form-control" [(ngModel)]="data.name">
+          </div>
+          <div class="col-md-3">
+            <label>Total</label>
+            <input type="text" class="form-control" [(ngModel)]="data.quantity" (keyup)="setMax($event.target.value)">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label>Descripción</label>
+            <textarea class="form-control" style="resize: vertical" [(ngModel)]="data.description" placeholder="Descripción de la deuda..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="data.quantity" style="margin-bottom: 0">
+        <div class="card">
+          <div class="card-header">
+            Deudores
+            <div class="float-right">
+              <div class="btn-group" dropdown>
+                <button dropdownToggle type="button" class="btn btn-primary btn-sm dropdown-toggle">
+                  Añadir deudores <span class="caret"></span>
+                </button>
+                <ul *dropdownMenu class="dropdown-menu" role="menu">
+                  <li role="menuitem" *ngFor="let user of users">
+                    <button class="dropdown-item" type="button" (click)="addUser(user)" [disabled]="user.disabled">{{ user.username }}</button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let user of data.users">
+              <div class="col-sm-2">{{ user.username }}</div>
+              <div class="col-sm-6">
+                <nouislider [min]="0" [max]="max" [(ngModel)]="user.quantity" (ngModelChange)="debtChange(user, $event)" style="margin-top: 1px; margin-bottom: 1px"></nouislider>
+              </div>
+              <div class="col-sm-2">
+                <input type="text" class="form-control input-sm" [(ngModel)]="user.quantity" />
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-outline-danger" (click)="removeUser(user)">Eliminar</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger mr-auto" [disabled]="working" (click)="delete()" *ngIf="data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'delete'"></i> Eliminar</button>
+        <button class="btn btn-warning" [disabled]="working" (click)="update()" *ngIf="data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'update'"></i> Modificar</button>
+        <button class="btn btn-success" [disabled]="working" (click)="create()" *ngIf="!data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'create'"></i> Crear</button>
+      </div>
+    </div>
+  </div>
+</div>

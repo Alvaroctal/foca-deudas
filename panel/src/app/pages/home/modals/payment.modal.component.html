@@ -1,0 +1,51 @@
+<div bsModal #modal="bs-modal" [config]="{ignoreBackdropClick: true}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Gestionar pago</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <label>Nombre</label>
+            <input type="text" class="form-control" [ngModel]="data.name" readonly>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label>Descripción</label>
+            <textarea class="form-control" style="resize: vertical" [ngModel]="data.description" placeholder="Descripción del evento..." readonly></textarea>
+          </div>
+        </div><hr>
+        <div class="row" *ngIf="data.user && data.user.id">
+          <div class="col-md-6">
+            <label>Owner</label>
+            <input type="text" class="form-control" [ngModel]="data.user.username" readonly>
+          </div>
+          <div class="col-md-6">
+            <label>Cantidad</label>
+            <input type="text" class="form-control" [ngModel]="data.user.quantity" readonly>
+          </div>
+        </div>
+        <div class="row" *ngIf="data.user && data.user.id">
+          <div class="col-md-6">
+            <label>Método<span class="text-danger">*</span></label>
+            <ng-select [options]="methods" [noFilter]="10" [(ngModel)]="data.user.method" [disabled]="this.user == data.user.id"></ng-select>
+          </div>
+          <div class="col-md-6" style="margin-top: 20px">
+            <a href="https://paypal.me/{{ data.user.paypal }}/{{ data.user.quantity }}" target="_blank" *ngIf="data.user.paypal && data.method == 'paypal'"><img class="img-fluid" src="https://www.paypalobjects.com/digitalassets/c/website/marketing/na/us/solution-providers/logos2/paypal-here.png" height="30px"></a>
+            <span class="text-danger" *ngIf="!data.user.paypal && data.method == 'paypal'">No ha configurado aún su PayPal</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="user && data.user && data.user.id">
+        <button class="btn btn-danger" [disabled]="working" (click)="resolve('rejected')" *ngIf="this.user.id == data.user.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'reject'"></i> NACK</button>
+        <button class="btn btn-success" [disabled]="working" (click)="resolve('confirmed')" *ngIf="this.user.id == data.user.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'accept'"></i> ACK</button>
+        <button class="btn btn-success" [disabled]="working" (click)="pay()" *ngIf="this.user.id != data.user.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'pay'" (click)="pay()"></i> RACK</button>
+      </div>
+    </div>
+  </div>
+</div>

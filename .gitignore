@@ -2,4 +2,4 @@ node_modules/
 vendor/
 composer.lock
 composer.phar
-config/
+api/core/environments/prod.json

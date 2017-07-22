@@ -1,0 +1,60 @@
+<div bsModal #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ data.id ? 'Modificar' : 'Nuevo'}} Usuario</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Nick<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="data.username">
+          </div>
+          <div class="col-md-4">
+            <label>Paypal</label>
+            <input type="text" class="form-control" [(ngModel)]="data.paypal">
+          </div>
+          <div class="col-md-4">
+            <label>Email</label>
+            <input type="text" class="form-control" [(ngModel)]="data.email">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <label>Contraseña<span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="data.passwd">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" (click)="data.passwd = math.random().toString(36).substr(2, 8)">Generar</button>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label>Tipo<span class="text-danger">*</span></label>
+            <ng-select [options]="ranks" [noFilter]="10" [disabled]="data.id" [(ngModel)]="data.rank"></ng-select>
+          </div>
+        </div>
+        <div class="row" *ngIf="data.telegram_token">
+          <div class="col-md-12">
+            <label>Telegram</label> <span class="float-right">/link &lt;code&gt;</span>
+            <div class="input-group">
+              <input type="text" class="form-control" readonly [(ngModel)]="data.telegram_token">
+              <span class="input-group-btn">
+                <button class="btn btn-default" [class.btn-success]="telegram_token_copied" type="button" [ngxClipboard]="data.telegram_token" (cbOnSuccess)="telegram_token_copied = true">Copiar</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary mr-auto" (click)="hide()"> Cancelar </button>
+        <button class="btn btn-warning" [disabled]="working" (click)="update()" *ngIf="data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'update'"></i> Modificar</button>
+        <button class="btn btn-success" [disabled]="working" (click)="create()" *ngIf="!data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'create'"></i> Crear</button>
+        <button class="btn btn-danger" [disabled]="working" (click)="delete()" *ngIf="data.id"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'delete'"></i> Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>

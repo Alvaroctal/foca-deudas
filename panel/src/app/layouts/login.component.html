@@ -1,0 +1,28 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card-group mb-0">
+          <div class="card p-2">
+            <div class="card-block">
+              <div class="input-group mb-1">
+                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                <input type="text" class="form-control" placeholder="Nombre de usuario" [(ngModel)]="credentials.username">
+              </div>
+              <div class="input-group mb-2">
+                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                <input type="password" class="form-control" placeholder="contraseña..." [(ngModel)]="credentials.passwd">
+              </div>
+              <div class="row">
+                <div class="col-12 float-right">
+                  <button type="button" class="btn btn-primary px-2" (click)="doLogin()" [disabled]="working"><i class="fa fa-spinner fa-pulse fa-fw" *ngIf="working == 'login'"></i> Acceder</button>
+                </div>
+                <div class="col-12" *ngIf="error" style="padding-top: 6px"><span class="text-danger">{{ error }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
