@@ -1,5 +1,11 @@
+# npm
 node_modules/
+package-lock.json
+
 vendor/
 composer.lock
 composer.phar
 api/core/environments/prod.json
+
+# JetBrains IDEs
+.idea/
