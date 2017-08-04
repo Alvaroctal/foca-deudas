@@ -2,20 +2,24 @@ import { Component, ViewChild } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserModalComponent } from './modals/user.modal.component';
-import { ModalDirective } from 'ngx-bootstrap';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { LoggedUserComponent } from "../../base/logged.user.component";
+import { Router } from "@angular/router";
 
 @Component({
   templateUrl: 'users.component.html'
 })
-export class UsersPageComponent {
+export class UsersPageComponent extends LoggedUserComponent {
 
     public users:Array<any> = [];
     public rows:Array<any> = [];
+
     @ViewChild(UserModalComponent) modalUser:UserModalComponent;
     @ViewChild(DatatableComponent) table: DatatableComponent;
-    constructor(public api:ApiService, public notificationService: NotificationService) {
-        this.reload()
+    constructor(private api:ApiService, private notificationService: NotificationService, router: Router) {
+        super(api, router);
+
+        this.reload();
     }
 
     public reload() {
@@ -32,4 +36,5 @@ export class UsersPageComponent {
           return user.username.toLowerCase().indexOf(val) !== -1 || !val;
         }); this.table.offset = 0;
     }
+
 }

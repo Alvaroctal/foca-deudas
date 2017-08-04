@@ -1,24 +1,27 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from "@angular/router";
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { PaymentModalComponent } from './modals/payment.modal.component';
-import { ModalDirective } from 'ngx-bootstrap';
+import { LoggedUserComponent } from "app/base/logged.user.component";
 
 @Component({
   templateUrl: 'home.component.html'
 })
-export class HomePageComponent {
+export class HomePageComponent extends LoggedUserComponent {
 
     public users:Array<any> = [];
     public debts:Array<any> = [];
-    public user:any = {};
-    @ViewChild(PaymentModalComponent) modalPayment:PaymentModalComponent;
-    constructor(public api:ApiService, public notificationService: NotificationService) {
+
+    @ViewChild(PaymentModalComponent) modalPayment: PaymentModalComponent;
+    constructor(private api: ApiService, public notificationService: NotificationService, router: Router) {
+        super(api, router);
+
         this.api.get('/users').then(response => {
             if (response['status'] == 1) { this.users = response['data'];
                 this.reload();
             } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener los usuarios'});
-        }); this.user = this.api.getUser();
+        });
     }
 
     public reload() {
@@ -39,10 +42,11 @@ export class HomePageComponent {
                             users.push(debtor);
                             debt['stats'][debtor.state]++;
                         } else users.push({ user: user.id, quantity: 0, state: false });
-                        if (users[users.length-1]['user'] == this.user['id']) debt['mine'] = users[users.length-1];
-                    } debt['users'] = users; debt
+                        if (users[users.length-1]['user'] == this.getUser()['id']) debt['mine'] = users[users.length-1];
+                    } debt['users'] = users;
                 } console.log(this.debts);
             } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener las deudas'});
         });
     }
+
 }

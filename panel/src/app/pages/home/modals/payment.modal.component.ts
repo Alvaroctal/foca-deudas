@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, EventEmitter, Output } from '@angular/core
 import { ModalDirective } from 'ngx-bootstrap';
 import { ApiService } from '../../../services/api.service';
 import { NotificationService } from '../../../services/notification.service';
-import { SelectComponent, IOption } from 'ng-select';
+import { IOption } from 'ng-select';
 
 @Component({
   selector: 'modal-payment',
@@ -12,16 +12,22 @@ export class PaymentModalComponent {
 
     public title:string;
     public data:any = {};
-    public user:any;
     public working:string;
-    public methods: Array<IOption> = [{value: 'cash', label: 'Metalico'},{value: 'paypal', label: 'PayPal'},{value: 'bank', label: 'Traferencia'},{value: 'other', label: 'Otro'}];
+    public methods: Array<IOption> = [
+        {value: 'cash', label: 'Metalico'},
+        {value: 'paypal', label: 'PayPal'},
+        {value: 'bank', label: 'Traferencia'},
+        {value: 'other', label: 'Otro'}
+    ];
+
     @ViewChild('modal') public modal:ModalDirective;
     @Output() reload = new EventEmitter();
-    @Input() api:ApiService;
-    constructor(public notificationService: NotificationService) { }
+    @Input() api: ApiService;
+    @Input() notificationService: NotificationService;
+    @Input() user: any;
+    constructor() {}
 
     public show($debt = null, $user = null) {
-        this.user = this.api.getUser()
         if ($debt) this.api.get('/debts/' + $debt['id']).then(result => { this.data = result['data'];
             this.api.get('/users/' + this.data['user']).then(result => {
                 this.data['user'] = Object.assign({}, result['data'], ($user ? $user : $debt['mine']));
@@ -56,4 +62,5 @@ export class PaymentModalComponent {
     public pay() { this.do('pay', { method: this.data.user.method }) }
 
     public resolve(state:string = 'confirmed') { this.do('resolve', { user: this.data.user.user, state: state }) }
+
 }
