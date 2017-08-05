@@ -1,38 +1,30 @@
-import {ApiService} from "../services/api.service";
 import {Router} from "@angular/router";
+import {LoggedUserService} from "app/services/logged.user.service";
+import {Component, OnInit} from "@angular/core";
 
-export class LoggedUserComponent {
+@Component({})
+export class LoggedUserComponent implements OnInit {
 
-    private router: Router;
+    constructor(protected router: Router, private loggedUserService: LoggedUserService) {}
 
-    protected user: any;
-
-    constructor(api: ApiService, router: Router) {
-        this.router = router;
-
-        this.checkLogin(api, router);
+    ngOnInit() {
+        this.checkLogin();
     }
 
-    protected getUser() {
-        return this.user;
+    protected checkLogin() {
+        if(this.loggedUserService.user && this.router.url === '/login') {
+            this.router.navigateByUrl('/home');
+        }
     }
 
-    protected checkLogin(api: ApiService, router: Router) {
-        api.getUserAsync().then(response => {
-            if(response) {
-                this.user = response['data'];
-            }
-            else {
-                router.navigateByUrl('/login');
-            }
-        }, () => {
-            router.navigateByUrl('/login');
-        });
+    protected getUsername(): string {
+        this.loggedUserService.loadUser();
+        return this.loggedUserService.user.username;
     }
 
-    public logout() {
+    protected logout() {
         window.localStorage.clear();
-        this.user = null;
+        this.loggedUserService.user = null;
         this.router.navigateByUrl('/login');
     }
 

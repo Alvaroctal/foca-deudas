@@ -1,27 +1,29 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { PaymentModalComponent } from './modals/payment.modal.component';
-import { LoggedUserComponent } from "app/base/logged.user.component";
+import { LoggedUserService } from "../../services/logged.user.service";
 
 @Component({
   templateUrl: 'home.component.html'
 })
-export class HomePageComponent extends LoggedUserComponent {
+export class HomePageComponent implements OnInit {
 
     public users:Array<any> = [];
     public debts:Array<any> = [];
+    private user: any;
 
     @ViewChild(PaymentModalComponent) modalPayment: PaymentModalComponent;
-    constructor(private api: ApiService, public notificationService: NotificationService, router: Router) {
-        super(api, router);
+    constructor(
+        private api: ApiService,
+        public notificationService: NotificationService,
+        private loggedUserService: LoggedUserService
+    ) {}
 
-        this.api.get('/users').then(response => {
-            if (response['status'] == 1) { this.users = response['data'];
-                this.reload();
-            } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener los usuarios'});
-        });
+    ngOnInit() {
+        this.loggedUserService.loadUser();
+        this.user = this.loggedUserService.user;
+        this.loadUsers();
     }
 
     public reload() {
@@ -42,10 +44,18 @@ export class HomePageComponent extends LoggedUserComponent {
                             users.push(debtor);
                             debt['stats'][debtor.state]++;
                         } else users.push({ user: user.id, quantity: 0, state: false });
-                        if (users[users.length-1]['user'] == this.getUser()['id']) debt['mine'] = users[users.length-1];
+                        if (users[users.length-1]['user'] == this.user['id']) debt['mine'] = users[users.length-1];
                     } debt['users'] = users;
                 } console.log(this.debts);
             } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener las deudas'});
+        });
+    }
+
+    private loadUsers() {
+        this.api.get('/users').then(response => {
+            if (response['status'] == 1) { this.users = response['data'];
+                this.reload();
+            } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener los usuarios'});
         });
     }
 

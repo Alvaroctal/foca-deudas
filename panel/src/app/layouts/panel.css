@@ -6,10 +6,14 @@ header.navbar .navbar-brand {
     background-size: 130px auto;
 }
 
-.sidebar-logout {
-    position: absolute !important;
-    top: 100%;
-    transform: translateY(-100%);
-    width: inherit;
+.nav-right {
+    margin-right: 1em;
+}
+
+.nav-user {
+    color: #3e3e3e;
+}
+
+.dropdown-item {
     cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { ApiService } from '../../../services/api.service';
 import { NotificationService } from '../../../services/notification.service';
 import { IOption } from 'ng-select';
+import {LoggedUserService} from "../../../services/logged.user.service";
 
 @Component({
   selector: 'modal-payment',
@@ -24,7 +25,7 @@ export class PaymentModalComponent {
     @Output() reload = new EventEmitter();
     @Input() api: ApiService;
     @Input() notificationService: NotificationService;
-    @Input() user: any;
+    @Input() loggedUserService: LoggedUserService;
     constructor() {}
 
     public show($debt = null, $user = null) {

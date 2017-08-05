@@ -1,24 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserModalComponent } from './modals/user.modal.component';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { LoggedUserComponent } from "../../base/logged.user.component";
-import { Router } from "@angular/router";
 
 @Component({
   templateUrl: 'users.component.html'
 })
-export class UsersPageComponent extends LoggedUserComponent {
+export class UsersPageComponent implements OnInit {
 
     public users:Array<any> = [];
     public rows:Array<any> = [];
 
     @ViewChild(UserModalComponent) modalUser:UserModalComponent;
     @ViewChild(DatatableComponent) table: DatatableComponent;
-    constructor(private api:ApiService, private notificationService: NotificationService, router: Router) {
-        super(api, router);
+    constructor(private api:ApiService, private notificationService: NotificationService) {}
 
+    ngOnInit() {
         this.reload();
     }
 

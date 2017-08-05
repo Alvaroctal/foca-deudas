@@ -6,6 +6,17 @@
             <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
         </li>
     </ul>
+    <ul class="nav navbar-nav ml-auto nav-right">
+        <li class="nav-item dropdown" dropdown="" placement="bottom right">
+            <a aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle role="button" aria-expanded="false">
+                <i class="fa fa-user nav-user"></i>
+                <span class="d-md-down-none nav-user">{{username}}</span>
+            </a>
+            <div aria-labelledby="simple-dropdown" class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" (click)="logout()"><i class="fa fa-lock"></i> Logout</a>
+            </div>
+        </li>
+    </ul>
 </header>
 
 <div class="app-body">
@@ -25,11 +36,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" [class.active] = "page == 'users'"  (click)="page = 'users'" [routerLink]="['/users']">
                         <i class="icon-people"></i> Usuarios
-                    </a>
-                </li>
-                <li class="nav-item sidebar-logout">
-                    <a class="nav-link active" [class.active] = false (click)="logout()">
-                        <i class="icon-logout"></i> Cerrar sesión
                     </a>
                 </li>
             </ul>
