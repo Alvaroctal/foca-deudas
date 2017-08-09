@@ -21,6 +21,7 @@ import { NouisliderModule } from 'ng2-nouislider';
 
 import { ApiService } from './services/api.service';
 import { NotificationService } from './services/notification.service';
+import { LoggedUserService } from "./services/logged.user.service";
 
 //------------------------------------------------------------------------------
 //  Layouts
@@ -49,18 +50,14 @@ import { UserModalComponent } from './pages/users/modals/user.modal.component';
 //  Modules
 //------------------------------------------------------------------------------
 
-import { HttpModule, JsonpModule } from '@angular/http'; 
+import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app.routing';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'angular-calendar';
 import { SelectModule } from 'ng-select';
-import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
-import { TextMaskModule } from 'angular2-text-mask';
-import { Observable } from 'rxjs/Observable';
-import { ToasterModule, ToasterService} from 'angular2-toaster/angular2-toaster';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
-import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -96,10 +93,15 @@ import { environment } from '../environments/environment';
     SIDEBAR_TOGGLE_DIRECTIVES,
     AsideToggleDirective
   ],
-  providers: [ApiService, NotificationService, {
-    provide: LocationStrategy,
-    useClass: HashLocationStrategy
-  }],
+  providers: [
+    ApiService,
+    NotificationService,
+    LoggedUserService,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    }
+  ],
   bootstrap: [ AppComponent ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   entryComponents: [ DebtModalComponent, UserModalComponent, PaymentModalComponent ]

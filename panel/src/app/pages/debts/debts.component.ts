@@ -1,22 +1,24 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { NotificationService } from '../../services/notification.service';
 import { DebtModalComponent } from './modals/debt.modal.component';
-import { ModalDirective } from 'ngx-bootstrap';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @Component({
     selector: 'debt-component',
     templateUrl: 'debts.component.html'
 })
-export class DebtsPageComponent {
+export class DebtsPageComponent implements OnInit {
 
     public debts:Array<any> = [];
     public rows:Array<any> = [];
+
     @ViewChild(DebtModalComponent) modalDebt:DebtModalComponent;
     @ViewChild(DatatableComponent) table: DatatableComponent;
-    constructor(public api:ApiService, public notificationService: NotificationService) {
-        this.reload()
+    constructor(private api: ApiService, private notificationService: NotificationService) {}
+
+    ngOnInit() {
+        this.reload();
     }
 
     public reload() {
@@ -33,4 +35,5 @@ export class DebtsPageComponent {
           return user.username.toLowerCase().indexOf(val) !== -1 || !val;
         }); this.table.offset = 0;
     }
+
 }

@@ -56,8 +56,8 @@ export class ApiService {
         });
     }
 
-    public getUser() {
-        return this.user;
+    public getUserAsync(): Promise<any> {
+        return this.get('/whoami');
     }
 
     public login(user) {
@@ -72,10 +72,4 @@ export class ApiService {
         });
     }
 
-    public logout() {
-        window.localStorage.clear();
-        this.token = null;
-        this.user = null;
-        this.router.navigateByUrl('/login');
-    }
 }

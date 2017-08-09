@@ -5,3 +5,15 @@
 header.navbar .navbar-brand {
     background-size: 130px auto;
 }
+
+.nav-right {
+    margin-right: 1em;
+}
+
+.nav-user {
+    color: #3e3e3e;
+}
+
+.dropdown-item {
+    cursor: pointer;
+}
