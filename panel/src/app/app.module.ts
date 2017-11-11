@@ -67,12 +67,6 @@ import { UserModalComponent } from './pages/users/modals/user.modal.component';
 
 import { environment } from '../environments/environment';
 
-export function jwtOptionsFactory() {
-  return {
-    tokenGetter: ApiService.getToken
-  }
-}
-
 @NgModule({
   imports: [
     BrowserModule,

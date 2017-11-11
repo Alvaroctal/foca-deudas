@@ -15,7 +15,6 @@
   },
   "private": true,
   "dependencies": {
-    "@agm/core": "^1.0.0-beta.2",
     "@angular/animations": "5.0.1",
     "@angular/common": "5.0.1",
     "@angular/compiler": "5.0.1",

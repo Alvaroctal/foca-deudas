@@ -7,6 +7,8 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ApiService {
 
+    static key:string = 'token';
+
     private baseURL:string = environment.server + '/api';
     private token:string;
     private user:any;
