@@ -13,7 +13,6 @@ export class LoginComponent {
         passwd: <string> ''
     };
     public error:string;
-    public userMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
     public working:string;
 
     constructor(public api: ApiService, public router: Router) { }

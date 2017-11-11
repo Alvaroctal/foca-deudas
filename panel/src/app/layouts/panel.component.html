@@ -1,51 +1,58 @@
 <header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler hidden-lg-up" type="button">&#9776;</button>
-    <a class="navbar-brand" href="#"></a>
-    <ul class="nav navbar-nav hidden-md-down">
-        <li class="nav-item">
-            <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
-        </li>
-    </ul>
+  <button class="navbar-toggler mobile-sidebar-toggler hidden-lg-up" type="button">&#9776;</button>
+  <a class="navbar-brand" href="#"></a>
+  <ul class="nav navbar-nav hidden-md-down">
+    <li class="nav-item">
+      <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+        <img src="https://via.placeholder.com/50x50" class="img-avatar">
+        <span class="hidden-md-down">{{ user.username }}</span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+        <a class="dropdown-item" (click)="todo()"><i class="fa fa-user"></i> Cuenta</a>
+        <a class="dropdown-item" (click)="api.logout()"><i class="fa fa-lock"></i> Salir</a>
+      </div>
+    </li>
+    <li class="nav-item hidden-md-down"></li>
+  </ul>
 </header>
-
 <div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link active" [class.active] = "page == 'home'"  (click)="page = 'home'" [routerLink]="['/home']">
-                        <i class="icon-speedometer"></i> Inicio
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" [class.active] = "page == 'debts'"  (click)="page = 'debts'" [routerLink]="['/debts']">
-                        <i class="icon-book-open"></i> Deudas
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" [class.active] = "page == 'users'"  (click)="page = 'users'" [routerLink]="['/users']">
-                        <i class="icon-people"></i> Usuarios
-                    </a>
-                </li>
-            </ul>
-        </nav>
+  <div class="sidebar">
+    <nav class="sidebar-nav">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" [class.active] = "page == '/home'" [routerLink]="['/home']">
+          <i class="icon-speedometer"></i> Inicio
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" [class.active] = "page == '/debts'" [routerLink]="['/debts']">
+          <i class="icon-book-open"></i> Deudas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" [class.active] = "page == '/users'" [routerLink]="['/users']">
+          <i class="icon-people"></i> Usuarios
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <main class="main">
+    <ol class="breadcrumb">
+      <breadcrumbs></breadcrumbs>
+    </ol>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
     </div>
-
-    <main class="main">
-
-        <ol class="breadcrumb">
-            <breadcrumbs></breadcrumbs>
-        </ol>
-
-        <div class="container-fluid">
-            <router-outlet></router-outlet>
-        </div>
-    </main>
+  </main>
 </div>
-
 <toaster-container [toasterconfig]="toasterconfig"></toaster-container>
-
 <footer class="app-footer">
-    2017 &copy; <a target="_blank" href="https://deudas.motherfocas.eu/">Foca Deudas</a> proudly developed by <a target="_blank" href="https://motherfocas.eu/">MotherFoca Industries</a>
-    <span class="float-right">v{{ version }}</span>
+  2017 &copy; <a target="_blank" href="https://deudas.motherfocas.eu/">Foca Deudas</a> proudly developed by <a target="_blank" href="https://motherfocas.eu/">MotherFoca Industries</a>
+  <span class="float-right">v{{ version }}</span>
 </footer>

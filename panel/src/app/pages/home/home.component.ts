@@ -41,7 +41,7 @@ export class HomePageComponent {
                         } else users.push({ user: user.id, quantity: 0, state: false });
                         if (users[users.length-1]['user'] == this.user['id']) debt['mine'] = users[users.length-1];
                     } debt['users'] = users; debt
-                } console.log(this.debts);
+                }
             } else this.notificationService.emit({ type: 'danger', title: 'Error interno', body: 'No es posible obtener las deudas'});
         });
     }

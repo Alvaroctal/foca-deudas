@@ -7,5 +7,7 @@ composer.lock
 composer.phar
 api/core/environments/prod.json
 
+panel/dist
+
 # JetBrains IDEs
 .idea/
